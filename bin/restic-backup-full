@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# Backup the most important directories into an archive named after
+# the machine this script is currently running on:
+
+# Only auto tags are pruned
+DD_RESTIC_TAG=${DD_RESTIC_TAG:-'auto'}
+
+hostname_opt=''
+if [ ! -z ${DD_RESTIC_HOSTNAME+x} ]; then
+	hostname_opt="--host $DD_RESTIC_HOSTNAME"
+fi
+
+restic_exe='restic'
+if [ ! -z ${DD_RESTIC_DRY_RUN+x} ]; then
+	restic_exe='echo restic'
+fi
+
+${restic_exe} backup                \
+     --verbose                      \
+     --tag ${DD_RESTIC_TAG}         \
+     ${hostname_opt}		    \
+    --exclude '/home/*/.cache/'     \
+    --exclude '/var/cache/'         \
+    --exclude '/var/tmp/'           \
+    --exclude '/var/lib/lxcfs/'     \
+    --exclude '/var/lib/docker/'    \
+    /etc                            \
+    /home                           \
+    /root                           \
+    /var                            \
+    /opt                            \
+
