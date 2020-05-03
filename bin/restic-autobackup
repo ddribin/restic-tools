@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# some helpers and error handling:
+info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
+trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
+bin_dir=$(dirname "$0")
+
+# Expects RESTIC_REPOSITORY and other env variables already set
+if [ -z "$RESTIC_REPOSITORY" ]; then
+    info "RESTIC_REPOSITORY is not set"
+    exit 2
+fi
+
+info "Starting backup (DD_RESTIC_DRY_RUN=${DD_RESTIC_DRY_RUN})"
+"$bin_dir/restic-backup-full"
+backup_exit=$?
+
+info "Forgeting snapshots"
+"$bin_dir/restic-forget-auto"
+forget_exit=$?
+
+# use highest exit code as global exit code
+global_exit=$(( backup_exit > forget_exit ? backup_exit : forget_exit ))
+
+if [ ${global_exit} -eq 0 ]; then
+    info "Backup and Forget finished successfully"
+elif [ ${global_exit} -eq 1 ]; then
+    info "Backup and/or Forget finished with warnings"
+else
+    info "Backup and/or Forget finished with errors"
+fi
+
+exit ${global_exit}
