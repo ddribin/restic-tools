@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Use the forget --prune subcommand to maintain 7 daily, 4 weekly, 12
+# monthly, and 2 yearly snapshots for THIS machine. Only 'auto' tags
+# are considered, so other snapshots are kept indefinitely.
+
+dry_run_opt=''
+if [ ! -z ${DD_RESTIC_DRY_RUN+x} ]; then
+    dry_run_opt='--dry-run'
+fi
+
+restic forget                       \
+     ${dry_run_opt}                 \
+     --prune                        \
+     --verbose                      \
+     --tag auto                     \
+     --keep-daily 7                 \
+     --keep-weekly 4                \
+     --keep-monthly 12              \
+     --keep-yearly 2                \
+     
