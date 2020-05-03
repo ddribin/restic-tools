@@ -6,20 +6,14 @@
 # Only auto tags are pruned
 DD_RESTIC_TAG=${DD_RESTIC_TAG:-'auto'}
 
-hostname_opt=''
-if [ ! -z ${DD_RESTIC_HOSTNAME+x} ]; then
-	hostname_opt="--host $DD_RESTIC_HOSTNAME"
-fi
-
 restic_exe='restic'
 if [ ! -z ${DD_RESTIC_DRY_RUN+x} ]; then
-	restic_exe='echo restic'
+    restic_exe='echo restic'
 fi
 
 ${restic_exe} backup                \
-     --verbose                      \
-     --tag ${DD_RESTIC_TAG}         \
-     ${hostname_opt}		    \
+    --verbose                       \
+    --tag ${DD_RESTIC_TAG}          \
     --exclude '/home/*/.cache/'     \
     --exclude '/var/cache/'         \
     --exclude '/var/tmp/'           \
