@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# Backup the most important directories into an archive named after
-# the machine this script is currently running on:
+# Backup the most important directories on this machine.
 
 # Only auto tags are pruned
 DD_RESTIC_TAG=${DD_RESTIC_TAG:-'auto'}
