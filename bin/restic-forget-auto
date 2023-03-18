@@ -13,8 +13,8 @@ restic forget                       \
      ${dry_run_opt}                 \
      --verbose                      \
      --tag auto                     \
-     --keep-daily 7                 \
-     --keep-weekly 4                \
+     --keep-daily   14              \
+     --keep-weekly  8               \
      --keep-monthly 12              \
-     --keep-yearly 2                \
+     --keep-yearly  2               \
      
